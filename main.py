@@ -58,8 +58,9 @@ if __name__ == "__main__":
     pygame.init()                                   ## inicializuje pygame
     clock = pygame.time.Clock()
     window = pygame.display.set_mode(config.GAME_RES)
-    snake = [config.GAME_RES[0] // 2, config.GAME_RES[1] // 2]
+    snake = [[config.GAME_RES[0] // 2, config.GAME_RES[1] // 2]]
     apple = generate_apple(config.GAME_RES, config.SNAKE_SIZE)
+
     direction = "UP"
 
     while True:
@@ -70,15 +71,20 @@ if __name__ == "__main__":
 
         keys = pygame.key.get_pressed()
         direction = update_direction(direction, keys)
-        snake = update_position(snake, direction, config.SNAKE_SIZE)
+        new_position = update_position(snake[0], direction, config.SNAKE_SIZE)
+        snake.insert(0, new_position)                                   ## pozícia, prvok
 
-        if is_collision(snake, apple):
+        if is_collision(snake[0], apple):
+            print("Apple eaten!")
             apple = generate_apple(config.GAME_RES, config.SNAKE_SIZE)
+        else:
+            snake.pop()                                                 ## zmaze posledny clanok
 
-        if is_out(snake, config.GAME_RES):
+        if is_out(snake[0], config.GAME_RES):                           ## snake[0] je akoze hlava
             end_game(window)
+        for part in snake:
+            pygame.draw.rect(window, config.BODY_COLOR, pygame.Rect(part[0], part[1], config.SNAKE_SIZE, config.SNAKE_SIZE))
 
-        pygame.draw.rect(window, config.BODY_COLOR, pygame.Rect(snake[0], snake[1], config.SNAKE_SIZE, config.SNAKE_SIZE))
         pygame.draw.rect(window, config.APPLE_COLOR, pygame.Rect(apple[0], apple[1], config.SNAKE_SIZE, config.SNAKE_SIZE))
 
         pygame.display.update()
