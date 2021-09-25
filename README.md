@@ -1,4 +1,4 @@
 # Snake_game
 
-According to video on youtube.
-Using pygame
+According to video on youtube. 
+Using pygame.
